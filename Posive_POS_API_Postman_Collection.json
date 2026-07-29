@@ -1,0 +1,530 @@
+{
+	"info": {
+		"_postman_id": "posive-pos-api-v1-collection",
+		"name": "Posive POS API Collection",
+		"description": "Postman Collection resmi untuk pengujian REST API Backend Posive POS (Technical Test Recruitment Web Developer Xolvon Project Incubator Program).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://posive-pos-backend-production.up.railway.app/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "bearer_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Login Kasir",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.access_token) {",
+									"    pm.collectionVariables.set('bearer_token', jsonData.access_token);",
+									"    console.log('Bearer token saved:', jsonData.access_token);",
+									"}",
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cashier@posive.id\",\n  \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Current User (Me)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					}
+				},
+				{
+					"name": "Logout Kasir",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Shift Management",
+			"item": [
+				{
+					"name": "Get Current Active Shift",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/shifts/current",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"shifts",
+								"current"
+							]
+						}
+					}
+				},
+				{
+					"name": "Buka Shift Kasir (Open Shift)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"start_cash\": 200000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/shifts/open",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"shifts",
+								"open"
+							]
+						}
+					}
+				},
+				{
+					"name": "Tutup Shift Kasir (Close Shift)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"actual_cash\": 450000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/shifts/close",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"shifts",
+								"close"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Products & Inventory",
+			"item": [
+				{
+					"name": "Get Products List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Product Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					}
+				},
+				{
+					"name": "Tambah Produk Baru",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"category_id\": 1,\n  \"name\": \"Es Kopi Aren Spesial\",\n  \"sku\": \"MN-999\",\n  \"price\": 22000,\n  \"cost_price\": 8000,\n  \"stock\": 50,\n  \"is_active\": true,\n  \"image_url\": \"https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Stok Produk",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stock\": 100\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1/stock",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1",
+								"stock"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Table Management",
+			"item": [
+				{
+					"name": "Get Tables List (Floor Plan)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tables",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tables"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Table Status (Kosongkan / Isi Meja)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"available\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/tables/1/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tables",
+								"1",
+								"status"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Orders & Checkout",
+			"item": [
+				{
+					"name": "Create Order Checkout (Pembayaran)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"table_id\": 1,\n  \"customer_name\": \"Zldan\",\n  \"order_type\": \"dine_in\",\n  \"payment_method\": \"cash\",\n  \"cash_received\": 50000,\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 1,\n      \"notes\": \"Pedas Sedang, Nasi Banyakan\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Transaction History List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Single Order Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Refund Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders/1/refund",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1",
+								"refund"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
